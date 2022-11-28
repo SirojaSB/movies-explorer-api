@@ -12,7 +12,7 @@ router.post('/signup', validateRegisterData, register);
 
 router.use(verifyToken);
 
-router.use('/me', userRouter);
+router.use('/users', userRouter);
 router.use('/movies', movieRouter);
 router.use('*', (req, res, next) => next(new NotFoundError(INCORRECT_URL)));
 

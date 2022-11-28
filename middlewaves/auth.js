@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { getJWTSecretKey } = require('../utills/utills');
 const UnauthorizedError = require('../utills/errors/unauthorizedError');
-const { WRONG_EMAIL_OR_PASS } = require('../utills/constants')
+const { WRONG_EMAIL_OR_PASS } = require('../utills/constants');
 
 module.exports.verifyToken = (req, res, next) => {
   const { authorization } = req.headers;

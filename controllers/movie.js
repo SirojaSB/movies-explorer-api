@@ -3,11 +3,11 @@ const Movie = require('../models/movie');
 const BadRequestError = require('../utills/errors/badRequestError');
 const NotFoundError = require('../utills/errors/notFoundError');
 const ForbiddenError = require('../utills/errors/forbiddenError');
-const { NOT_FOUND_MOVIE, INCORRECT_DATA, NO_ACCESS_TO_DELETE } = require('../utills/constants')
+const { NOT_FOUND_MOVIE, INCORRECT_DATA, NO_ACCESS_TO_DELETE } = require('../utills/constants');
 
 module.exports.getSavedMovies = async (req, res, next) => {
   try {
-    const movies = Movie.find({ owner: req.user._id });
+    const movies = await Movie.find({ owner: req.user._id });
 
     return res.send(movies);
   } catch (err) {
@@ -17,7 +17,7 @@ module.exports.getSavedMovies = async (req, res, next) => {
 
 module.exports.createMovie = async (req, res, next) => {
   try {
-    const movie = Movie.create({ ...req.body, owner: req.user._id });
+    const movie = await Movie.create({ ...req.body, owner: req.user._id });
 
     return res.send(movie);
   } catch (err) {
@@ -31,7 +31,8 @@ module.exports.createMovie = async (req, res, next) => {
 
 module.exports.deleteMovie = async (req, res, next) => {
   try {
-    const movie = Movie.findById(req.params.movieId).orFail(new NotFoundError(NOT_FOUND_MOVIE));
+    const movie = await Movie.findById(req.params.movieId)
+      .orFail(new NotFoundError(NOT_FOUND_MOVIE));
 
     if (!movie.owner.equals(req.user._id)) {
       return next(new ForbiddenError(NO_ACCESS_TO_DELETE));
